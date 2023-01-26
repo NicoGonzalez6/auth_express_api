@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import fs from 'fs';
-import { cleanRouteFile } from '../utils/router.utils';
+import { cleanRouteFile } from '../utils/helper';
 
 const router = Router();
 
