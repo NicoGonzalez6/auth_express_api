@@ -1,5 +1,5 @@
 import { Model, Optional, DataTypes } from 'sequelize';
-import { sequelize } from '../db/db';
+import sequelize from '../db/db';
 
 interface userAttributesI {
 	id?: number;

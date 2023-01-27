@@ -9,7 +9,7 @@ export interface generateTokenI {
 	email: string;
 }
 
-export const generateToken = (payload: generateTokenI): string => {
+const generateToken = (payload: generateTokenI): string => {
 	const { id, email, name } = payload;
 
 	const userPayload = {
@@ -24,3 +24,5 @@ export const generateToken = (payload: generateTokenI): string => {
 
 	return token;
 };
+
+export default { generateToken };

@@ -3,7 +3,7 @@ import bcrypt from '../utils/bcrypt';
 import { checkRequiredFields, checkValidResource } from '../utils/helper';
 import User, { addUserOptionalFields, userOutputI } from '../models/user';
 import { StatusCodes } from 'http-status-codes';
-import { generateToken, generateTokenI } from '../utils/jwt';
+import jwt, { generateTokenI } from '../utils/jwt';
 
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
@@ -39,7 +39,7 @@ export const login = async (req: Request, res: Response) => {
 		},
 	})) as userOutputI;
 
-	const token = generateToken(user.dataValues as generateTokenI);
+	const token = jwt.generateToken(user.dataValues as generateTokenI);
 
 	res.status(StatusCodes.OK).json({ user: user.dataValues, token });
 };
