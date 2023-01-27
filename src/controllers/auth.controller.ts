@@ -47,7 +47,7 @@ export const login = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
 	const { name, email, password } = req.body;
 
-	await checkRequiredFields(name, email, password);
+	checkRequiredFields(name, email, password);
 
 	const hashPassword = await bcrypt.hashPassword(password);
 
