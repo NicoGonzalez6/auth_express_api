@@ -13,3 +13,9 @@ export const checkRequiredFields = (...rest: (string | number)[]): void => {
 export const cleanRouteFile = (file: string): string => {
 	return file.split('.')[0];
 };
+
+export const checkValidResource = (value: any, message: string) => {
+	if (!value) {
+		throw new customErr.badRequest(message);
+	}
+};

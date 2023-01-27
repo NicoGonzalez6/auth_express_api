@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import bcrypt from '../utils/bcrypt';
-import { checkRequiredFields } from '../utils/helper';
+import { checkRequiredFields, checkValidResource } from '../utils/helper';
 import User, { addUserOptionalFields, userOutputI } from '../models/user';
 import { StatusCodes } from 'http-status-codes';
-import customErr from '../errors';
+import { generateToken, generateTokenI } from '../utils/jwt';
 
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
@@ -19,20 +19,16 @@ export const login = async (req: Request, res: Response) => {
 		},
 	})) as userOutputI;
 
-	if (!user) {
-		throw new customErr.notFound('User not found');
-	}
+	checkValidResource(user, 'User not found');
 
-	const storePassword = user.dataValues.password;
+	const storedPassword = <string>user.dataValues.password;
 
 	const comparePassword = await bcrypt.verifyPassword(
 		password,
-		storePassword
+		storedPassword
 	);
 
-	if (!comparePassword) {
-		throw new customErr.badRequest('invalid credentials');
-	}
+	checkValidResource(comparePassword, 'invalid credentials');
 
 	user = (await User.findOne({
 		where: {
@@ -43,7 +39,9 @@ export const login = async (req: Request, res: Response) => {
 		},
 	})) as userOutputI;
 
-	res.status(StatusCodes.OK).json(user.dataValues);
+	const token = generateToken(user.dataValues as generateTokenI);
+
+	res.status(StatusCodes.OK).json({ user: user.dataValues, token });
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -62,9 +60,8 @@ export const register = async (req: Request, res: Response) => {
 		},
 	});
 
-	if (existingUser?.dataValues) {
-		throw new customErr.badRequest('existing user');
-	}
+	checkValidResource(!existingUser?.dataValues, 'existing user');
+
 	const payload: addUserOptionalFields = {
 		name,
 		email,
@@ -73,14 +70,14 @@ export const register = async (req: Request, res: Response) => {
 
 	await User.create(payload);
 
-	const newUser = await User.findOne({
+	const newUser = (await User.findOne({
 		where: {
 			email,
 		},
 		attributes: {
 			exclude: ['createdAt', 'password', 'updatedAt'],
 		},
-	});
+	})) as userOutputI;
 
 	res.status(StatusCodes.CREATED).json(newUser?.dataValues);
 };

@@ -1,6 +1,8 @@
 import { Dialect } from 'sequelize';
 import dotenv from 'dotenv';
 
+dotenv.config();
+
 interface configDbInterface {
 	dbName: string;
 	dbUser: string;
@@ -9,8 +11,6 @@ interface configDbInterface {
 	dbPort: number | undefined;
 	dbDriver: Dialect;
 }
-
-dotenv.config();
 
 export const configDb: configDbInterface = {
 	dbDriver: <Dialect>process.env.DB_DRIVER,

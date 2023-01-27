@@ -1,20 +1,22 @@
-import User from '../models/user';
-import { sequelize } from './db';
+import path from 'path';
+import fs from 'fs';
 
 const node_env = process.env.NODE_ENV as string;
 
 const isDev = node_env.trim() == 'development';
 
-//models for sync
-const models = [User];
+const modelsFolder = path.join(__dirname, '..', 'models');
 
-//database init function
-const connectAndSync = async (): Promise<void> => {
+const connectAndSyncDb = async (): Promise<void> => {
 	try {
-		sequelize.sync({ alter: isDev });
+		fs.readdirSync(modelsFolder).forEach(async (files) => {
+			await import(`${modelsFolder}/${files}`).then((file) => {
+				file.default.sync({ alter: isDev });
+			});
+		});
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-export default connectAndSync;
+export default connectAndSyncDb;
