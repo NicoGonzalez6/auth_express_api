@@ -1,4 +1,7 @@
 import { sign } from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export interface generateTokenI {
 	id: number;

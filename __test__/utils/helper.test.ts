@@ -1,4 +1,8 @@
-import { checkRequiredFields, cleanRouteFile } from '../../src/utils/helper';
+import {
+	checkRequiredFields,
+	checkValidResource,
+	cleanRouteFile,
+} from '../../src/utils/helper';
 import customErr from '../../src/errors';
 
 describe('test of the global helpers functions', () => {
@@ -23,5 +27,20 @@ describe('test of the global helpers functions', () => {
 	it('Should clean the extension file name from the file', () => {
 		const file = 'file.ts';
 		expect(cleanRouteFile(file)).toEqual('file');
+	});
+
+	it('Should check if a resource if valid and fail given an invalid one', () => {
+		const file = false;
+
+		expect(() => checkValidResource(file, 'invalid')).toThrow(
+			customErr.badRequest
+		);
+	});
+
+	it('Should check if a resource if valid and pass given a valid one', () => {
+		const file = true;
+		expect(() => checkValidResource(file, 'invalid')).not.toThrow(
+			customErr.badRequest
+		);
 	});
 });
