@@ -10,15 +10,7 @@ export interface generateTokenI {
 }
 
 const generateToken = (payload: generateTokenI): string => {
-	const { id, email, name } = payload;
-
-	const userPayload = {
-		id: id,
-		name: name,
-		email: email,
-	};
-
-	const token = sign(userPayload, process.env.TOKEN_SECRET as string, {
+	const token = sign(payload, process.env.TOKEN_SECRET as string, {
 		expiresIn: process.env.TOKEN_EXPIRE,
 	});
 
