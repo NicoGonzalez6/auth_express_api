@@ -14,9 +14,6 @@ export const login = async (req: Request, res: Response) => {
 		where: {
 			email: email,
 		},
-		attributes: {
-			exclude: ['createdAt', 'updatedAt'],
-		},
 	})) as userOutputI;
 
 	checkValidResource(user, 'User not found');
@@ -35,7 +32,7 @@ export const login = async (req: Request, res: Response) => {
 			email: email,
 		},
 		attributes: {
-			exclude: ['createdAt', 'updatedAt', 'password'],
+			exclude: ['password'],
 		},
 	})) as userOutputI;
 
@@ -56,7 +53,7 @@ export const register = async (req: Request, res: Response) => {
 			email,
 		},
 		attributes: {
-			exclude: ['createdAt', 'password', 'updatedAt'],
+			exclude: ['password'],
 		},
 	});
 
@@ -75,7 +72,7 @@ export const register = async (req: Request, res: Response) => {
 			email,
 		},
 		attributes: {
-			exclude: ['createdAt', 'password', 'updatedAt'],
+			exclude: ['password'],
 		},
 	})) as userOutputI;
 

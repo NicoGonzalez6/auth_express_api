@@ -7,6 +7,13 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
 	host: dbHost,
 	dialect: dbDriver,
 	port: dbPort,
+	define: {
+		defaultScope: {
+			attributes: {
+				exclude: ['createdAt', 'updatedAt'],
+			},
+		},
+	},
 });
 
 export default sequelize;
